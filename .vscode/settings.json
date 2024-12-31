@@ -1,4 +1,7 @@
 {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "aws.telemetry": false
+    "aws.telemetry": false,
+    "[terraform-vars]": {
+        "editor.defaultFormatter": "hashicorp.terraform"
+    }
 }

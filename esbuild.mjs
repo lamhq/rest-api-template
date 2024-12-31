@@ -3,7 +3,7 @@ import { esbuildPluginDecorator } from 'esbuild-plugin-decorator';
 import { clean } from 'esbuild-plugin-clean';
 
 await build({
-  entryPoints: ['src/crud/main.ts'],
+  entryPoints: ['src/crud/lambda.ts'],
   outdir: 'dist',
   // outbase: 'src',
   sourcemap: true,
@@ -11,11 +11,7 @@ await build({
   target: 'node20',
   bundle: true,
   minify: true,
-  external: [
-    '@nestjs/microservices',
-    '@nestjs/platform-express',
-    '@nestjs/websockets/socket-module',
-  ],
+  external: ['@nestjs/microservices', '@nestjs/websockets/socket-module'],
   plugins: [
     esbuildPluginDecorator({
       tsconfigPath: 'tsconfig.json',
