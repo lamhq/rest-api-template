@@ -26,6 +26,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_exec_policy" {
 data "archive_file" "code_archive" {
   type        = "zip"
   source_dir  = "${local.build_dir}"
+  excludes    = ["code.zip"]
   output_path = "${local.build_dir}/code.zip"
 }
 
@@ -39,7 +40,7 @@ resource "aws_s3_object" "code_object" {
 
 # lambda function
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = "${local.name_prefix}-proxy"
+  function_name    = "${local.name_prefix}-lambda"
   handler          = "lambda.handler"
   role             = aws_iam_role.lambda_role.arn
   s3_bucket        = var.artifact_bucket

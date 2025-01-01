@@ -5,7 +5,6 @@ import { clean } from 'esbuild-plugin-clean';
 await build({
   entryPoints: ['src/crud/lambda.ts'],
   outdir: 'dist',
-  // outbase: 'src',
   sourcemap: true,
   platform: 'node',
   target: 'node20',
