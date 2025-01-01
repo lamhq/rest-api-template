@@ -49,8 +49,8 @@ jobs:
       - name: deploy the app
         working-directory: infra
         run: |
-          echo "${{ secrets.TF_BACKEND_CONFIG }}" > backend.tfvars
+          echo '${{ secrets.TF_BACKEND_CONFIG }}' > backend.tfvars
           terraform init -backend-config=backend.tfvars -reconfigure
           terraform workspace select dev
-          echo "${{ secrets.TF_INPUT_VARIABLES }}" > input.tfvars
+          echo '${{ secrets.TF_INPUT_VARIABLES }}' > input.tfvars
           terraform apply --auto-approve -var-file="input.tfvars"
