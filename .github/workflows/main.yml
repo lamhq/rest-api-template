@@ -17,9 +17,23 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
-      - name: Git clone the repository
+      - name: clone the repository
         uses: actions/checkout@v3
+
+      - name: set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: build the app
+        run: |
+          corepack enable pnpm
+          pnpm install --prod=false
+          pnpm run build
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -27,6 +41,16 @@ jobs:
           role-to-assume: arn:aws:iam::851725582763:role/rat-dev-cicd-role
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Sts GetCallerIdentity
+      - name: set up Terraform CLI for CI server
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.3"
+
+      - name: deploy the app
+        working-directory: infra
         run: |
-          aws sts get-caller-identity
+          echo "${{ secrets.TF_BACKEND_CONFIG }}" > backend.tfvars
+          terraform init -backend-config=backend.tfvars -reconfigure
+          terraform workspace select dev
+          echo "${{ secrets.TF_INPUT_VARIABLES }}" > input.tfvars
+          terraform apply --auto-approve -var-file="input.tfvars"
