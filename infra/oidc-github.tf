@@ -25,6 +25,8 @@ resource "aws_iam_role" "cicd_role" {
         Condition = {
           StringEquals = {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com",
+          },
+          StringLike = {
             "token.actions.githubusercontent.com:sub" = "repo:lamhq/rest-api-template:*"
           }
         }
@@ -54,6 +56,6 @@ resource "aws_iam_role_policy_attachment" "cicd_role_policy_attachment" {
   policy_arn = aws_iam_policy.cicd_role_policy.arn
 }
 
-output "github_role_arn" {
+output "cicd_role_arn" {
   value = aws_iam_role.cicd_role.arn
 }
