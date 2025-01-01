@@ -21,8 +21,13 @@ jobs:
     steps:
       - name: clone the repository
         uses: actions/checkout@v3
+      
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.1
 
-      - name: set up Node.js
+      - name: set up Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
