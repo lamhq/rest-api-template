@@ -9,6 +9,12 @@ resource "aws_iam_openid_connect_provider" "github" {
   ]
 }
 
+variable "github_repo_id" {
+  description = "GitHub repository identifier"
+  type        = string
+  default     = "github-username/repository-name"
+}
+
 # role for CI server (in this case, Github Action)
 resource "aws_iam_role" "cicd_role" {
   name = "${local.name_prefix}-cicd-role"
@@ -27,7 +33,7 @@ resource "aws_iam_role" "cicd_role" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com",
           },
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:lamhq/rest-api-template:*"
+            "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo_id}:*"
           }
         }
       }
