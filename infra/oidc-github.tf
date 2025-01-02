@@ -1,5 +1,5 @@
 resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
+  url            = "https://token.actions.githubusercontent.com"
   client_id_list = ["sts.amazonaws.com"]
 
   thumbprint_list = [
@@ -49,9 +49,47 @@ resource "aws_iam_policy" "cicd_role_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action = "*",
-        Resource = "*"
+        "Effect" : "Allow",
+        "Action" : ["iam:CreateRole", "iam:AttachRolePolicy", "iam:PassRole"],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : ["s3:PutObject", "s3:GetObject"],
+        "Resource" : "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "lambda:CreateFunction",
+          "lambda:DeleteFunction",
+          "lambda:UpdateFunctionCode",
+          "lambda:GetFunction",
+          "lambda:InvokeFunction",
+          "lambda:AddPermission",
+          "lambda:RemovePermission",
+          "lambda:UpdateFunctionConfiguration",
+          "lambda:PublishVersion",
+          "lambda:CreateAlias",
+          "lambda:UpdateAlias"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "apigateway:*",
+        ],
+        "Resource": "arn:aws:apigateway:*::/restapis/${aws_api_gateway_rest_api.rest_api.id}"
       },
     ]
   })

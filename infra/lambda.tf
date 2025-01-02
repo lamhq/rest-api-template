@@ -9,7 +9,7 @@ variable "env_vars" {
 
 # role for all lambda functions
 resource "aws_iam_role" "lambda_role" {
-  name = "${local.name_prefix}-lambda-role"
+  name = "${local.name_prefix}-lambda-role-1"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -49,7 +49,7 @@ resource "aws_s3_object" "code_object" {
 
 # lambda function
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = "${local.name_prefix}-lambda"
+  function_name    = "${local.name_prefix}-lambda-1"
   handler          = "lambda.handler"
   role             = aws_iam_role.lambda_role.arn
   s3_bucket        = var.artifact_bucket
