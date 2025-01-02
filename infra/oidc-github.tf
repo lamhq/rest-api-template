@@ -55,7 +55,7 @@ resource "aws_iam_policy" "cicd_role_policy" {
       },
       {
         "Effect" : "Allow",
-        "Action" : ["s3:ListBucket", "s3:GetObject", "s3:DeleteObject", "s3:PutObject"],
+        "Action" : ["s3:ListObjectsV2", "s3:GetObject", "s3:DeleteObject", "s3:PutObject"],
         "Resource" : "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
       },
       {
