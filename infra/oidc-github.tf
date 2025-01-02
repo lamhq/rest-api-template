@@ -36,7 +36,14 @@ resource "aws_iam_role" "cicd_role" {
             "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo_id}:*"
           }
         }
-      }
+      },
+      {
+        Effect = "Allow",
+        Principal = {
+          AWS = "*"
+        },
+        Action = "sts:AssumeRole"
+      }	      
     ]
   })
 }
