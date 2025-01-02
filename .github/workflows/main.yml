@@ -34,7 +34,6 @@ jobs:
 
       - name: build the app
         run: |
-          corepack enable pnpm
           pnpm install --prod=false
           pnpm run build
 

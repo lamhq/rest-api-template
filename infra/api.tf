@@ -1,6 +1,6 @@
 # api gateway
 resource "aws_api_gateway_rest_api" "rest_api" {
-  name = "${local.name_prefix}-rest-api-1"
+  name = "${local.name_prefix}-rest-api"
   endpoint_configuration {
     types = ["EDGE"]
   } 
