@@ -6,5 +6,8 @@
     },
     "[terraform]": {
         "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }

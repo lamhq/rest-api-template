@@ -15,6 +15,11 @@ variable "github_repo_id" {
   default     = "github-username/repository-name"
 }
 
+variable "dynamodb_table" {
+  description = "DynamoDB table name to perform state locking"
+  type        = string
+}
+
 # role for CI server (in this case, Github Action)
 resource "aws_iam_role" "cicd_role" {
   name = "${local.name_prefix}-cicd-role"
@@ -43,61 +48,80 @@ resource "aws_iam_role" "cicd_role" {
           AWS = "*"
         },
         Action = "sts:AssumeRole"
-      }	      
+      }
     ]
   })
 }
 
 # permissions of CI server
 resource "aws_iam_policy" "cicd_role_policy" {
+  name        = "${local.name_prefix}-terraform-permissions"
   description = "Permissions of CICD server"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      # manage terraform's stuff
       {
         "Effect" : "Allow",
-        "Action" : ["iam:CreateRole", "iam:AttachRolePolicy", "iam:PassRole"],
-        "Resource" : "*"
+        "Action" : ["s3:ListBucket"],
+        "Resource" : "arn:aws:s3:::${var.artifact_bucket}"
       },
       {
         "Effect" : "Allow",
-        "Action" : ["s3:ListObjectsV2", "s3:GetObject", "s3:DeleteObject", "s3:PutObject"],
+        "Action" : ["s3:*"],
         "Resource" : "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
       },
       {
         "Effect" : "Allow",
-        "Action" : [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
+        "Action" : ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem"],
+        "Resource" : "arn:aws:dynamodb:*:*:table/${var.dynamodb_table}"
+      },
+
+      # manage application code
+      {
+        "Effect" : "Allow",
+        "Resource" : ["arn:aws:apigateway:${var.region}::/restapis/*"],
+        "Action" : ["apigateway:*"]
+      },
+      {
+        "Effect" : "Allow",
+        "Resource" : ["arn:aws:lambda:${var.region}:*:function:${local.name_prefix}-*"],
+        "Action" : ["lambda:*"]
+      },
+
+      # manage log groups of project
+      {
+        "Effect" : "Allow",
+        "Action" : ["logs:DescribeLogGroups"],
         "Resource" : "*"
       },
       {
         "Effect" : "Allow",
-        "Action" : [
-          "lambda:CreateFunction",
-          "lambda:DeleteFunction",
-          "lambda:UpdateFunctionCode",
-          "lambda:GetFunction",
-          "lambda:InvokeFunction",
-          "lambda:AddPermission",
-          "lambda:RemovePermission",
-          "lambda:UpdateFunctionConfiguration",
-          "lambda:PublishVersion",
-          "lambda:CreateAlias",
-          "lambda:UpdateAlias"
-        ],
-        "Resource" : "*"
+        "Action" : ["logs:*"],
+        "Resource" : "arn:aws:logs:${var.region}:*:log-group:/aws/lambda/${local.name_prefix}-*"
       },
+
+      # manage roles & policies of project
       {
-        "Effect": "Allow",
-        "Action": [
-          "apigateway:*",
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:*"
         ],
-        "Resource": "arn:aws:apigateway:*::/restapis/${aws_api_gateway_rest_api.rest_api.id}"
+        "Resource" : [
+          "arn:aws:iam::*:role/${local.name_prefix}-*",
+          "arn:aws:iam::*:policy/${local.name_prefix}-*"
+        ]
       },
+
+      # manage identity providers of project
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:*"
+        ],
+        "Resource" : "arn:aws:iam::*:oidc-provider/token.actions.githubusercontent.com"
+      }
     ]
   })
 }

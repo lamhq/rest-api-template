@@ -1,6 +1,6 @@
 # api gateway
 resource "aws_api_gateway_rest_api" "rest_api" {
-  name = "${local.name_prefix}-rest-api-1"
+  name = "${local.name_prefix}-rest-api"
   endpoint_configuration {
     types = ["EDGE"]
   } 
@@ -62,4 +62,8 @@ resource "aws_lambda_permission" "api_lambda_permission" {
   function_name = aws_lambda_function.lambda_function.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*"
+}
+
+output "api_url" {
+  value = aws_api_gateway_stage.rest_api_v1_stage.invoke_url
 }

@@ -12,7 +12,7 @@ export class UserService {
   findOne(id: number): Promise<User> {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      throw new NotFoundException(`User with ID-1 ${id} not found`);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
     return Promise.resolve(user);
   }

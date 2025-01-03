@@ -72,6 +72,7 @@ region          = "<AWS region>"
 project         = "<project name>"
 artifact_bucket = "<s3 bucket for storing application artifact>"
 github_repo_id  = "github-username/repo-name"
+dynamodb_table       = "<DynamoDB table name to perform state locking>"
 env_vars        = {
   WEB_URL       = ""
   DB_URI        = ""

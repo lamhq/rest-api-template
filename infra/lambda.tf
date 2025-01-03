@@ -9,7 +9,7 @@ variable "env_vars" {
 
 # role for all lambda functions
 resource "aws_iam_role" "lambda_role" {
-  name = "${local.name_prefix}-lambda-role-1"
+  name = "${local.name_prefix}-lambda-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -42,14 +42,14 @@ data "archive_file" "code_archive" {
 # s3 object that contain function code
 resource "aws_s3_object" "code_object" {
   bucket      = var.artifact_bucket
-  key         = "${local.s3_prefix}/code-1.zip"
+  key         = "${local.s3_prefix}/code.zip"
   source      = data.archive_file.code_archive.output_path
   source_hash = filemd5(data.archive_file.code_archive.output_path)
 }
 
 # lambda function
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = "${local.name_prefix}-lambda-1"
+  function_name    = "${local.name_prefix}-lambda"
   handler          = "lambda.handler"
   role             = aws_iam_role.lambda_role.arn
   s3_bucket        = var.artifact_bucket
