@@ -70,7 +70,10 @@ resource "aws_iam_policy" "cicd_role_policy" {
       {
         "Effect" : "Allow",
         "Action" : ["s3:*"],
-        "Resource" : "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
+        "Resource" : [
+          "arn:aws:s3:::${var.artifact_bucket}/terraform.tfstate",
+          "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
+        ]
       },
       {
         "Effect" : "Allow",
