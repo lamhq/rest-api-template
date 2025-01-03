@@ -40,7 +40,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: arn:aws:iam::851725582763:role/rat-dev-cicd-role
+          role-to-assume: ${{ vars.CI_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: set up Terraform CLI for CI server
@@ -54,5 +54,5 @@ jobs:
           echo '${{ secrets.TF_BACKEND_CONFIG }}' > backend.tfvars
           terraform init -backend-config=backend.tfvars -reconfigure
           terraform workspace select dev
-          echo '${{ secrets.TF_INPUT_VARIABLES }}' > input.tfvars
+          echo '${{ secrets.TF_INPUT_VARS }}' > input.tfvars
           terraform apply --auto-approve -var-file="input.tfvars"

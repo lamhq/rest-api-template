@@ -106,7 +106,7 @@ terraform apply -var-file="input.tfvars" --auto-approve
 
 1. Create a new environment `dev`
 2. Add an environment secret `TS_BACKEND_CONFIG` with content from `infra/backend.tfvars`
-3. Add an environment secret `TF_INPUT_VARIABLES` with content from `infra/input.tfvars`
+3. Add an environment secret `TF_INPUT_VARS` with content from `infra/input.tfvars`
 
 
 ### Deploy the application automatically 
