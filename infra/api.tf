@@ -63,3 +63,7 @@ resource "aws_lambda_permission" "api_lambda_permission" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*"
 }
+
+output "api_url" {
+  value = aws_api_gateway_stage.rest_api_v1_stage.invoke_url
+}

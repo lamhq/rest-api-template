@@ -3,5 +3,11 @@
     "aws.telemetry": false,
     "[terraform-vars]": {
         "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "[terraform]": {
+        "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }

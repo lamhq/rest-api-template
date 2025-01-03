@@ -6,7 +6,7 @@
         {
             "label": "deploy",
             "type": "shell",
-            "command": "terraform apply -var-file=\"params.tfvars\" --auto-approve",
+            "command": "terraform apply -var-file=\"input.tfvars\" --auto-approve",
             "options": {
                 "cwd": "infra"
             }

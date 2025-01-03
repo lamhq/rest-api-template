@@ -2,6 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
+      version = "~> 5.82.2"
     }
  
     # provides a data source that can create archives from individual files or collections of files

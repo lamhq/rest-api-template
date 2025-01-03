@@ -1,5 +1,6 @@
 {
   "name": "nest-typescript-starter",
+  "packageManager": "pnpm@9.15.1",
   "private": true,
   "version": "1.0.0",
   "description": "Nest TypeScript starter repository",

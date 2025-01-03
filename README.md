@@ -46,27 +46,44 @@ npm run build
 ```
 
 
-## Infrastructure Setup
+## Deploy
+
+Here're required steps to deploy the application from scratch:
+
+1. Set up the local environment
+2. Create the infrastructure by running the deploy command manually
+3. Set up Github Environment secrets
+4. Deploy the application automatically on code push
+
+### Set up local environment
 
 Create a `infra/backend.tfvars` file that contains configuration for Terraform S3 backend:
 ```hcl filename="infra/backend.tfvars"
-region               = "<enter>"
-workspace_key_prefix = "rat"
-bucket               = "<enter>"
+region               = "<AWS region>"
+workspace_key_prefix = "<project name>"
+bucket               = "<s3 bucket for storing Terraform state>"
 key                  = "terraform.tfstate"
-dynamodb_table       = ""
+dynamodb_table       = "<DynamoDB table name to perform state locking>"
 ```
 
-Create a `infra/params.tfvars` file that contain required input parameters (see [`variables.tf`](./variables.tf)):
+Create a `infra/input.tfvars` file that contain required input variables:
 ```hcl filename="params.tfvars"
-region          = "<enter>"
-project         = "rat"
-artifact_bucket = "<enter>"
+region          = "<AWS region>"
+project         = "<project name>"
+artifact_bucket = "<s3 bucket for storing application artifact>"
+github_repo_id  = "github-username/repo-name"
+dynamodb_table       = "<DynamoDB table name to perform state locking>"
+env_vars        = {
+  WEB_URL       = ""
+  DB_URI        = ""
+}
 ```
 
 Prepare AWS credentials in the terminal.
 
-Init the project:
+### Create the infrastructure
+
+Init Terraform working directory:
 ```shell
 cd infra
 terraform init -backend-config=backend.tfvars -reconfigure
@@ -74,18 +91,33 @@ terraform workspace new dev
 terraform workspace select dev
 ```
 
-
-## Deploy
-
+Build the source code:
 ```shell
-terraform apply -var-file="params.tfvars" --auto-approve
+npm install
+npm run build
+
 ```
+Deploy:
+```shell
+terraform apply -var-file="input.tfvars" --auto-approve
+```
+
+### Set up Github Environment secrets
+
+1. Create a new environment `dev`
+2. Add an environment secret `TS_BACKEND_CONFIG` with content from `infra/backend.tfvars`
+3. Add an environment secret `TF_INPUT_VARS` with content from `infra/input.tfvars`
+
+
+### Deploy the application automatically 
+
+An Github Action workflow will run every time code is pushed to the `main` branch. See `.github/workflows/main.yml`.
 
 
 ## Clean up
 
 ```sh
-terraform destroy -var-file="params.tfvars" --auto-approve
+terraform destroy -var-file="input.tfvars" --auto-approve
 terraform workspace select default
 terraform workspace delete dev
 ```

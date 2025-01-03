@@ -1,3 +1,12 @@
+# environment variables for the lambda function
+variable "env_vars" {
+  description = "Environment variables for the application"
+  type = object({
+    WEB_URL      = string
+    DB_URI       = string
+  })
+}
+
 # role for all lambda functions
 resource "aws_iam_role" "lambda_role" {
   name = "${local.name_prefix}-lambda-role"
