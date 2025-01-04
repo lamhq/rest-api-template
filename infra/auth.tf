@@ -1,3 +1,11 @@
+variable "google_client_id" {
+  type = string
+}
+
+variable "google_client_secret" {
+  type = string
+}
+
 resource "aws_cognito_user_pool" "user_pool" {
   name = "${local.name_prefix}-user-pool"
 
@@ -17,8 +25,8 @@ resource "aws_cognito_identity_provider" "google_idp" {
   provider_type = "Google"
 
   provider_details = {
-    client_id                     = "966526925320-2vd5cuk9phmufelu7g3hunikpndmhsae.apps.googleusercontent.com"
-    client_secret                 = "dquKxygAQWhKTnSYRtLalOx9"
+    client_id                     = var.google_client_id
+    client_secret                 = var.google_client_secret
     authorize_scopes              = "openid email profile"
     attributes_url                = "https://people.googleapis.com/v1/people/me?personFields="
     attributes_url_add_attributes = true
