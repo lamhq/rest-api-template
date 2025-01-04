@@ -7,7 +7,7 @@ variable "env_vars" {
   })
 }
 
-# role for all lambda functions
+# role for the lambda function
 resource "aws_iam_role" "lambda_role" {
   name = "${local.name_prefix}-lambda-role"
   assume_role_policy = jsonencode({
@@ -25,7 +25,7 @@ resource "aws_iam_role" "lambda_role" {
   tags = local.role_tags
 }
 
-# role's policy `AWSLambdaBasicExecutionRole`
+# access for logging
 resource "aws_iam_role_policy_attachment" "lambda_basic_exec_policy" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
@@ -34,15 +34,15 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_exec_policy" {
 # deployment package for Lambda function
 data "archive_file" "code_archive" {
   type        = "zip"
-  source_dir  = "${local.build_dir}"
+  source_dir  = "${local.build_dir}/crud"
   excludes    = ["code.zip"]
-  output_path = "${local.build_dir}/code.zip"
+  output_path = "${local.build_dir}/crud.zip"
 }
 
 # s3 object that contain function code
 resource "aws_s3_object" "code_object" {
   bucket      = var.artifact_bucket
-  key         = "${local.s3_prefix}/code.zip"
+  key         = "${local.s3_prefix}/crud.zip"
   source      = data.archive_file.code_archive.output_path
   source_hash = filemd5(data.archive_file.code_archive.output_path)
 }
