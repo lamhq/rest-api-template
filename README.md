@@ -68,14 +68,14 @@ dynamodb_table       = "<DynamoDB table name to perform state locking>"
 
 Create a `infra/input.tfvars` file that contain required input variables:
 ```hcl filename="params.tfvars"
-region               = "<AWS region>"
+aws_region           = "<AWS region>"
 project              = "<project name>"
 artifact_bucket      = "<s3 bucket for storing application artifact>"
 github_repo_id       = "github-username/repo-name"
 dynamodb_table       = "<DynamoDB table name to perform state locking>"
 google_client_id     = ""
 google_client_secret = ""
-env_vars = {
+api_env_vars = {
   WEB_URL = ""
   DB_URI  = ""
 }
