@@ -57,15 +57,6 @@ resource "aws_api_gateway_integration" "nb_lambda_int" {
   uri                     = aws_lambda_function.api_handler.invoke_arn
 }
 
-# API permission for invoking lambda functions
-resource "aws_lambda_permission" "nb_api_lambda_permission" {
-  statement_id  = "AllowAPIGatewayInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.api_handler.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.nb_api.execution_arn}/*/*"
-}
-
 # API authorizer
 resource "aws_api_gateway_authorizer" "nb_authorizer" {
   name            = "${local.name_prefix}-nb-authorizer"

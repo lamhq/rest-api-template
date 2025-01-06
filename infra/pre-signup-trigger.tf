@@ -40,22 +40,22 @@ resource "aws_iam_policy" "pre_signup_trigger_policy" {
     Statement = [
       # user pool
       {
-        "Effect" : "Allow",
-        "Action" : [
+        Effect = "Allow"
+        Action = [
           "cognito-idp:AdminGetUser",
           "cognito-idp:AdminLinkProviderForUser"
-        ],
-        "Resource" : "${aws_cognito_user_pool.user_pool.arn}"
+        ]
+        Resource = "${aws_cognito_user_pool.user_pool.arn}"
       },
       # logging
       {
-        "Effect" : "Allow",
-        "Action" : [
+        Effect = "Allow"
+        Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
-        ],
-        "Resource" : "${aws_cloudwatch_log_group.pre_signup_trigger_log_grp.arn}"
+        ]
+        Resource = "${aws_cloudwatch_log_group.pre_signup_trigger_log_grp.arn}"
       }
     ]
   })
@@ -89,4 +89,14 @@ resource "aws_lambda_function" "pre_signup_trigger" {
 # lambda function's log group
 resource "aws_cloudwatch_log_group" "pre_signup_trigger_log_grp" {
   name = "/aws/lambda/${aws_lambda_function.pre_signup_trigger.function_name}"
+}
+
+
+# resource based policy that allow Amazon Cognito to invoke the trigger
+resource "aws_lambda_permission" "api_cognito_permission" {
+  statement_id  = "AllowACognitoInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pre_signup_trigger.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.user_pool.arn
 }

@@ -46,7 +46,7 @@ resource "aws_iam_role" "ci_role" {
       {
         Effect = "Allow",
         Principal = {
-          AWS = "*"
+          "AWS" = "*"
         },
         Action = "sts:AssumeRole"
       }
@@ -64,9 +64,9 @@ resource "aws_iam_policy" "resource_mgmt_policy" {
     Statement = [
       # manage s3 bucket
       {
-        "Effect" : "Allow",
-        "Action" : ["s3:*"]
-        "Resource" : [
+        Effect = "Allow"
+        Action = ["s3:*"]
+        Resource = [
           "${aws_s3_bucket.project_bucket.arn}",
           "${aws_s3_bucket.project_bucket.arn}/*",
         ]
@@ -74,49 +74,49 @@ resource "aws_iam_policy" "resource_mgmt_policy" {
 
       # manage application code
       {
-        "Effect" : "Allow",
-        "Action" : ["apigateway:*"]
-        "Resource" : [
+        Effect = "Allow"
+        Action = ["apigateway:*"]
+        Resource = [
           "arn:aws:apigateway:${var.aws_region}::/restapis",
           "arn:aws:apigateway:${var.aws_region}::/restapis/*",
           "arn:aws:apigateway:${var.aws_region}::/tags/*",
-        ],
+        ]
       },
       {
-        "Effect" : "Allow",
-        "Action" : ["lambda:*"]
-        "Resource" : "arn:aws:lambda:${var.aws_region}:${local.aws_acc_id}:function:${local.name_prefix}-*",
+        Effect = "Allow"
+        Action = ["lambda:*"]
+        Resource = "arn:aws:lambda:${var.aws_region}:${local.aws_acc_id}:function:${local.name_prefix}-*",
       },
 
       # manage user pool
       {
-        "Effect" : "Allow",
-        "Action" : ["cognito-idp:*"],
-        "Resource" : "arn:aws:cognito-idp:${var.aws_region}:${local.aws_acc_id}:userpool/*"
+        Effect = "Allow"
+        Action = ["cognito-idp:*"]
+        Resource = "arn:aws:cognito-idp:${var.aws_region}:${local.aws_acc_id}:userpool/*"
       },
       {
-        "Effect" : "Allow",
-        "Action" : ["cognito-idp:DescribeUserPoolDomain"],
-        "Resource" : "*"
+        Effect = "Allow"
+        Action = ["cognito-idp:DescribeUserPoolDomain"]
+        Resource = "*"
       },
 
       # manage log groups of project
       {
-        "Effect" : "Allow",
-        "Action" : ["logs:DescribeLogGroups"],
-        "Resource" : "*"
+        Effect = "Allow"
+        Action = ["logs:DescribeLogGroups"]
+        Resource = "*"
       },
       {
-        "Effect" : "Allow",
-        "Action" : ["logs:*"],
-        "Resource" : "arn:aws:logs:${var.aws_region}:${local.aws_acc_id}:log-group:/aws/lambda/${local.name_prefix}-*"
+        Effect = "Allow"
+        Action = ["logs:*"]
+        Resource = "arn:aws:logs:${var.aws_region}:${local.aws_acc_id}:log-group:/aws/lambda/${local.name_prefix}-*"
       },
 
       # manage roles & policies of project
       {
-        "Effect" : "Allow",
-        "Action" : ["iam:*"],
-        "Resource" : [
+        Effect = "Allow"
+        Action = ["iam:*"]
+        Resource = [
           "arn:aws:iam::${local.aws_acc_id}:role/${local.name_prefix}-*",
           "arn:aws:iam::${local.aws_acc_id}:policy/${local.name_prefix}-*"
         ]
@@ -124,9 +124,9 @@ resource "aws_iam_policy" "resource_mgmt_policy" {
 
       # manage identity providers of project
       {
-        "Effect" : "Allow",
-        "Action" : ["iam:*"],
-        "Resource" : "arn:aws:iam::${local.aws_acc_id}:oidc-provider/token.actions.githubusercontent.com"
+        Effect = "Allow"
+        Action = ["iam:*"]
+        Resource = "arn:aws:iam::${local.aws_acc_id}:oidc-provider/token.actions.githubusercontent.com"
       }
     ]
   })

@@ -91,3 +91,12 @@ resource "aws_lambda_function" "api_handler" {
 resource "aws_cloudwatch_log_group" "api_log_grp" {
   name = "/aws/lambda/${aws_lambda_function.api_handler.function_name}"
 }
+
+# resource based policy that allow API Gateway to invoke lambda functions
+resource "aws_lambda_permission" "api_apigtw_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.api_handler.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.nb_api.execution_arn}/*/*"
+}
