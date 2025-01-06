@@ -54,7 +54,9 @@ export const handler: Handler<BasePreSignUpTriggerEvent<string>> = async (
   } catch (error) {
     if (error instanceof UserNotFoundException) {
       // If user is not found, deny the sign-up
-      throw new Error(`User ${email} does not exist in the user pool.`);
+      throw new Error(
+        `Registration is not allowed. Please contact administrator`,
+      );
     }
 
     // Handle other errors
