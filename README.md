@@ -51,9 +51,10 @@ npm run build
 Here're required steps to deploy the application from scratch:
 
 1. Set up the local environment
-2. Create the infrastructure by running the deploy command manually
-3. Set up Github Environment secrets
-4. Deploy the application automatically on code push
+2. Create the infrastructure by executing the deploy command manually
+3. Create an user in Amazon Cognito user pool
+4. Set up Github Environment secrets
+5. Deploy the application automatically on code push
 
 ### Set up local environment
 
@@ -70,7 +71,6 @@ Create a `infra/input.tfvars` file that contain required input variables:
 ```hcl filename="params.tfvars"
 aws_region           = "<AWS region>"
 project              = "<project name>"
-artifact_bucket      = "<s3 bucket for storing application artifact>"
 github_repo_id       = "github-username/repo-name"
 dynamodb_table       = "<DynamoDB table name to perform state locking>"
 google_client_id     = ""

@@ -7,8 +7,8 @@ data "archive_file" "functions_archive" {
 
 # s3 object that contain function code
 resource "aws_s3_object" "functions_obj" {
-  bucket      = var.artifact_bucket
-  key         = "${local.s3_prefix}/functions.zip"
+  bucket      = aws_s3_bucket.project_bucket.id
+  key         = "functions.zip"
   source      = data.archive_file.functions_archive.output_path
   source_hash = filemd5(data.archive_file.functions_archive.output_path)
 }
@@ -72,7 +72,7 @@ resource "aws_lambda_function" "pre_signup_trigger" {
   function_name    = "${local.name_prefix}-pre-signup-trigger"
   handler          = "pre-signup.handler"
   role             = aws_iam_role.functions_role.arn
-  s3_bucket        = var.artifact_bucket
+  s3_bucket        = aws_s3_bucket.project_bucket.id
   s3_key           = aws_s3_object.functions_obj.key
   source_code_hash = aws_s3_object.functions_obj.source_hash
   runtime          = "nodejs22.x"

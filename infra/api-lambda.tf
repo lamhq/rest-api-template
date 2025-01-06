@@ -61,8 +61,8 @@ data "archive_file" "api_archive" {
 
 # s3 object that contain function code
 resource "aws_s3_object" "api_obj" {
-  bucket      = var.artifact_bucket
-  key         = "${local.s3_prefix}/api.zip"
+  bucket      = aws_s3_bucket.project_bucket.id
+  key         = "api.zip"
   source      = data.archive_file.api_archive.output_path
   source_hash = filemd5(data.archive_file.api_archive.output_path)
 }
@@ -72,7 +72,7 @@ resource "aws_lambda_function" "api_handler" {
   function_name    = "${local.name_prefix}-api"
   handler          = "lambda.handler"
   role             = aws_iam_role.api_role.arn
-  s3_bucket        = var.artifact_bucket
+  s3_bucket        = aws_s3_bucket.project_bucket.id
   s3_key           = aws_s3_object.api_obj.key
   source_code_hash = aws_s3_object.api_obj.source_hash
   runtime          = "nodejs22.x"

@@ -1,6 +1,6 @@
-variable "dynamodb_table" {
-  description = "DynamoDB table name to perform state locking"
-  type        = string
+variable "tf_backend_policy_arn" {
+  type = string
+  description = "ARN of IAM policy for managing Terraform backend resources on AWS"
 }
 
 variable "github_repo_id" {
@@ -54,36 +54,22 @@ resource "aws_iam_role" "ci_role" {
   })
 }
 
-# permissions of CI server
-resource "aws_iam_policy" "ci_policy" {
-  name = "${local.name_prefix}-ci-policy"
+# permissions to manage project's resources
+resource "aws_iam_policy" "resource_mgmt_policy" {
+  name = "${local.name_prefix}-resource-mgmt-policy"
+  description = "Permissions to manage project's resources"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # manage terraform's stuff
+      # manage s3 bucket
       {
         "Effect" : "Allow",
-        "Action" : ["s3:ListBucket"],
-        "Resource" : "arn:aws:s3:::${var.artifact_bucket}"
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : ["s3:*"],
+        "Action" : ["s3:*"]
         "Resource" : [
-          "arn:aws:s3:::${var.artifact_bucket}/terraform.tfstate",
-          "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
+          "${aws_s3_bucket.project_bucket.arn}",
+          "${aws_s3_bucket.project_bucket.arn}/*",
         ]
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "dynamodb:DescribeTable",
-          "dynamodb:GetItem",
-          "dynamodb:PutItem",
-          "dynamodb:DeleteItem"
-        ],
-        "Resource" : "arn:aws:dynamodb:${var.aws_region}:${local.aws_acc_id}:table/${var.dynamodb_table}"
       },
 
       # manage application code
@@ -99,14 +85,14 @@ resource "aws_iam_policy" "ci_policy" {
       {
         "Effect" : "Allow",
         "Action" : ["lambda:*"]
-        "Resource" : ["arn:aws:lambda:${var.aws_region}:${local.aws_acc_id}:function:${local.name_prefix}-*"],
+        "Resource" : "arn:aws:lambda:${var.aws_region}:${local.aws_acc_id}:function:${local.name_prefix}-*",
       },
 
       # manage user pool
       {
         "Effect" : "Allow",
         "Action" : ["cognito-idp:*"],
-        "Resource" : ["arn:aws:cognito-idp:${var.aws_region}:${local.aws_acc_id}:userpool/${var.aws_region}*"]
+        "Resource" : "arn:aws:cognito-idp:${var.aws_region}:${local.aws_acc_id}:userpool/*"
       },
       {
         "Effect" : "Allow",
@@ -146,9 +132,14 @@ resource "aws_iam_policy" "ci_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ci_role_pol_attm" {
+resource "aws_iam_role_policy_attachment" "resource_mgmt_pol_attm" {
   role       = aws_iam_role.ci_role.name
-  policy_arn = aws_iam_policy.ci_policy.arn
+  policy_arn = aws_iam_policy.resource_mgmt_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "tf_backend_pol_attm" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = var.tf_backend_policy_arn
 }
 
 output "ci_role_arn" {
