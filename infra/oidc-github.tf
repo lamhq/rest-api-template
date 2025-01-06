@@ -46,7 +46,7 @@ resource "aws_iam_role" "ci_role" {
       {
         Effect = "Allow",
         Principal = {
-          "AWS" = "*"
+          AWS = "*"
         },
         Action = "sts:AssumeRole"
       }
