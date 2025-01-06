@@ -5,4 +5,6 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
-bootstrap();
+bootstrap().catch((error: unknown) => {
+  console.error('Unhandled error during bootstrap:', error);
+});

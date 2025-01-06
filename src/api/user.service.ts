@@ -12,13 +12,14 @@ export class UserService {
   findOne(id: number): Promise<User> {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${id.toString()} not found`);
     }
     return Promise.resolve(user);
   }
 
   create(user: User): Promise<User> {
-    user.id = this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
+    user.id =
+      this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
     this.users.push(user);
     return Promise.resolve(user);
   }
@@ -26,7 +27,7 @@ export class UserService {
   remove(id: number): Promise<void> {
     const index = this.users.findIndex((user) => user.id === id);
     if (index === -1) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${id.toString()} not found`);
     }
     this.users.splice(index, 1);
     return Promise.resolve();
