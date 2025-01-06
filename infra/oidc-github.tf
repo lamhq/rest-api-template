@@ -1,4 +1,15 @@
-resource "aws_iam_openid_connect_provider" "github" {
+variable "tf_backend_policy_arn" {
+  type = string
+  description = "ARN of IAM policy for managing Terraform backend resources on AWS"
+}
+
+variable "github_repo_id" {
+  description = "GitHub repository identifier"
+  type        = string
+  default     = "github-username/repository-name"
+}
+
+resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
   url            = "https://token.actions.githubusercontent.com"
   client_id_list = ["sts.amazonaws.com"]
 
@@ -9,20 +20,9 @@ resource "aws_iam_openid_connect_provider" "github" {
   ]
 }
 
-variable "github_repo_id" {
-  description = "GitHub repository identifier"
-  type        = string
-  default     = "github-username/repository-name"
-}
-
-variable "dynamodb_table" {
-  description = "DynamoDB table name to perform state locking"
-  type        = string
-}
-
 # role for CI server (in this case, Github Action)
-resource "aws_iam_role" "cicd_role" {
-  name = "${local.name_prefix}-cicd-role"
+resource "aws_iam_role" "ci_role" {
+  name = "${local.name_prefix}-ci-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -30,7 +30,7 @@ resource "aws_iam_role" "cicd_role" {
       {
         Effect = "Allow",
         Principal = {
-          Federated = aws_iam_openid_connect_provider.github.arn
+          Federated = aws_iam_openid_connect_provider.github_oidc_provider.arn
         },
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
@@ -42,6 +42,7 @@ resource "aws_iam_role" "cicd_role" {
           }
         }
       },
+      # should be removed after testing
       {
         Effect = "Allow",
         Principal = {
@@ -53,87 +54,94 @@ resource "aws_iam_role" "cicd_role" {
   })
 }
 
-# permissions of CI server
-resource "aws_iam_policy" "cicd_role_policy" {
-  name        = "${local.name_prefix}-terraform-permissions"
-  description = "Permissions of CICD server"
+# permissions to manage project's resources
+resource "aws_iam_policy" "resource_mgmt_policy" {
+  name = "${local.name_prefix}-resource-mgmt-policy"
+  description = "Permissions to manage project's resources"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # manage terraform's stuff
+      # manage s3 bucket
       {
-        "Effect" : "Allow",
-        "Action" : ["s3:ListBucket"],
-        "Resource" : "arn:aws:s3:::${var.artifact_bucket}"
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : ["s3:*"],
-        "Resource" : [
-          "arn:aws:s3:::${var.artifact_bucket}/terraform.tfstate",
-          "arn:aws:s3:::${var.artifact_bucket}/${local.s3_prefix}/*"
+        Effect = "Allow"
+        Action = ["s3:*"]
+        Resource = [
+          "${aws_s3_bucket.project_bucket.arn}",
+          "${aws_s3_bucket.project_bucket.arn}/*",
         ]
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem"],
-        "Resource" : "arn:aws:dynamodb:*:*:table/${var.dynamodb_table}"
       },
 
       # manage application code
       {
-        "Effect" : "Allow",
-        "Resource" : ["arn:aws:apigateway:${var.region}::/restapis/*"],
-        "Action" : ["apigateway:*"]
+        Effect = "Allow"
+        Action = ["apigateway:*"]
+        Resource = [
+          "arn:aws:apigateway:${var.aws_region}::/restapis",
+          "arn:aws:apigateway:${var.aws_region}::/restapis/*",
+          "arn:aws:apigateway:${var.aws_region}::/tags/*",
+        ]
       },
       {
-        "Effect" : "Allow",
-        "Resource" : ["arn:aws:lambda:${var.region}:*:function:${local.name_prefix}-*"],
-        "Action" : ["lambda:*"]
+        Effect = "Allow"
+        Action = ["lambda:*"]
+        Resource = "arn:aws:lambda:${var.aws_region}:${local.aws_acc_id}:function:${local.name_prefix}-*",
+      },
+
+      # manage user pool
+      {
+        Effect = "Allow"
+        Action = ["cognito-idp:*"]
+        Resource = "arn:aws:cognito-idp:${var.aws_region}:${local.aws_acc_id}:userpool/*"
+      },
+      {
+        Effect = "Allow"
+        Action = ["cognito-idp:DescribeUserPoolDomain"]
+        Resource = "*"
       },
 
       # manage log groups of project
       {
-        "Effect" : "Allow",
-        "Action" : ["logs:DescribeLogGroups"],
-        "Resource" : "*"
+        Effect = "Allow"
+        Action = ["logs:DescribeLogGroups"]
+        Resource = "*"
       },
       {
-        "Effect" : "Allow",
-        "Action" : ["logs:*"],
-        "Resource" : "arn:aws:logs:${var.region}:*:log-group:/aws/lambda/${local.name_prefix}-*"
+        Effect = "Allow"
+        Action = ["logs:*"]
+        Resource = "arn:aws:logs:${var.aws_region}:${local.aws_acc_id}:log-group:/aws/lambda/${local.name_prefix}-*"
       },
 
       # manage roles & policies of project
       {
-        "Effect" : "Allow",
-        "Action" : [
-          "iam:*"
-        ],
-        "Resource" : [
-          "arn:aws:iam::*:role/${local.name_prefix}-*",
-          "arn:aws:iam::*:policy/${local.name_prefix}-*"
+        Effect = "Allow"
+        Action = ["iam:*"]
+        Resource = [
+          "arn:aws:iam::${local.aws_acc_id}:role/${local.name_prefix}-*",
+          "arn:aws:iam::${local.aws_acc_id}:policy/${local.name_prefix}-*"
         ]
       },
 
       # manage identity providers of project
       {
-        "Effect" : "Allow",
-        "Action" : [
-          "iam:*"
-        ],
-        "Resource" : "arn:aws:iam::*:oidc-provider/token.actions.githubusercontent.com"
+        Effect = "Allow"
+        Action = ["iam:*"]
+        Resource = "arn:aws:iam::${local.aws_acc_id}:oidc-provider/token.actions.githubusercontent.com"
       }
     ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "cicd_role_policy_attachment" {
-  role       = aws_iam_role.cicd_role.name
-  policy_arn = aws_iam_policy.cicd_role_policy.arn
+resource "aws_iam_role_policy_attachment" "resource_mgmt_pol_attm" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = aws_iam_policy.resource_mgmt_policy.arn
 }
 
-output "cicd_role_arn" {
-  value = aws_iam_role.cicd_role.arn
+resource "aws_iam_role_policy_attachment" "tf_backend_pol_attm" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = var.tf_backend_policy_arn
+}
+
+output "ci_role_arn" {
+  value = aws_iam_role.ci_role.arn
 }
