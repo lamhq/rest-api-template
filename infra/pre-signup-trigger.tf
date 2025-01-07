@@ -55,7 +55,7 @@ resource "aws_iam_policy" "pre_signup_trigger_policy" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "${aws_cloudwatch_log_group.pre_signup_trigger_log_grp.arn}"
+        Resource = "${aws_cloudwatch_log_group.pre_signup_trigger_log_grp.arn}:*"
       }
     ]
   })
