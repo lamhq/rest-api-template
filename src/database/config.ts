@@ -1,0 +1,25 @@
+import 'reflect-metadata';
+import 'dotenv/config';
+import { DataSourceOptions } from 'typeorm';
+import { SeederOptions } from 'typeorm-extension';
+
+export type DatabaseConfig = DataSourceOptions & SeederOptions;
+
+export const configFactory = (): DatabaseConfig => ({
+  type: 'mongodb',
+  url: process.env.DB_URI ?? '',
+  entities: ['src/api/diary/**/*.entity.ts'],
+  useUnifiedTopology: true,
+
+  // db migration config
+  migrations: ['src/database/migration/*.ts'],
+  migrationsTableName: 'migrations',
+
+  // db seeding config
+  seeds: ['src/api/diary/seeds/**/*.ts'],
+  factories: ['src/api/diary/factories/**/*.ts'],
+  seedTracking: false, // ensure that a seeder is only executed once
+
+  // NestJS config
+  // autoLoadEntities: true,
+});
