@@ -18,8 +18,7 @@ export class UserService {
   }
 
   create(user: User): Promise<User> {
-    user.id =
-      this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
+    user.id = this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
     this.users.push(user);
     return Promise.resolve(user);
   }

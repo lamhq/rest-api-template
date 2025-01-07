@@ -5,10 +5,7 @@ const config = {
   roots: ['<rootDir>/src'],
 
   // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '**/__tests__/**/*.+(ts|tsx|js)',
-    '**/?(*.)+(spec|test).+(ts|tsx|js)',
-  ],
+  testMatch: ['**/__tests__/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
 
   // A map from regular expressions to paths to transformers
   transform: {

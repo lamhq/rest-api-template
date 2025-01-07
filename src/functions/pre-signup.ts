@@ -14,9 +14,7 @@ const client = new CognitoIdentityProviderClient();
  * and link external accounts with existing users in the user pool
  * https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html
  */
-export const handler: Handler<BasePreSignUpTriggerEvent<string>> = async (
-  event,
-) => {
+export const handler: Handler<BasePreSignUpTriggerEvent<string>> = async (event) => {
   if (event.triggerSource !== 'PreSignUp_ExternalProvider') {
     event.response.autoConfirmUser = true;
     return event;
@@ -54,9 +52,7 @@ export const handler: Handler<BasePreSignUpTriggerEvent<string>> = async (
   } catch (error) {
     if (error instanceof UserNotFoundException) {
       // If user is not found, deny the sign-up
-      throw new Error(
-        `Registration is not allowed. Please contact administrator`,
-      );
+      throw new Error(`Registration is not allowed. Please contact administrator`);
     }
 
     // Handle other errors
