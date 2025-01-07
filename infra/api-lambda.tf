@@ -2,8 +2,8 @@
 variable "api_env_vars" {
   description = "Environment variables for the application"
   type = object({
-    WEB_URL      = string
-    DB_URI       = string
+    WEB_URL = string
+    DB_URI  = string
   })
 }
 
@@ -40,7 +40,7 @@ resource "aws_iam_policy" "api_policy" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ],
-        "Resource" : "${aws_cloudwatch_log_group.api_log_grp.arn}"
+        "Resource" : "${aws_cloudwatch_log_group.api_log_grp.arn}:*"
       }
     ]
   })
@@ -81,7 +81,7 @@ resource "aws_lambda_function" "api_handler" {
   architectures    = ["arm64"]
   environment {
     variables = merge(var.api_env_vars, {
-      NO_COLOR = "true"
+      NO_COLOR     = "true"
       NODE_OPTIONS = "--enable-source-maps"
     })
   }

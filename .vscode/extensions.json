@@ -1,7 +1,8 @@
 {
-    "recommendations": [
-        "esbenp.prettier-vscode",
-        "hashicorp.terraform",
-        "sanaajani.taskrunnercode"
-    ]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "hashicorp.terraform",
+    "sanaajani.taskrunnercode",
+    "orta.vscode-jest"
+  ]
 }
