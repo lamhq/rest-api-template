@@ -3,6 +3,7 @@
     "esbenp.prettier-vscode",
     "hashicorp.terraform",
     "sanaajani.taskrunnercode",
-    "orta.vscode-jest"
+    "orta.vscode-jest",
+    "mongodb.mongodb-vscode"
   ]
 }
