@@ -14,6 +14,7 @@ await build({
   external: [
     '@nestjs/microservices',
     '@nestjs/websockets/socket-module',
+    'class-transformer/storage',
     'aws-lambda',
     '@aws-sdk/client-cognito-identity-provider',
   ],
