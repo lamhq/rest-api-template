@@ -6,7 +6,6 @@ import {
 import { ConfigFactory, ConfigObject } from '@nestjs/config';
 
 export interface AppConfig extends ConfigObject {
-  webUrl: string;
   typeorm: TypeOrmModuleOptions & DatabaseConfig;
 }
 
@@ -15,7 +14,6 @@ export const configFactory: ConfigFactory<AppConfig> = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { entities, ...dbConfig } = dbConfigFactory();
   return {
-    webUrl: process.env.WEB_URL ?? '',
     typeorm: {
       ...dbConfig,
       autoLoadEntities: true, // any entity registered through `forFeature()` will be automatically added to TypeORM entity list
