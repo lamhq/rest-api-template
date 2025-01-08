@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository, ObjectLiteral } from 'typeorm';
-import { Activity, ActivityQuery } from './activity.entity';
-import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
-import { ObjectId } from 'mongodb';
-import { ActivityDto } from './activity.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ObjectId } from 'mongodb';
+import { MongoRepository, ObjectLiteral } from 'typeorm';
+import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
+import { ActivityDto } from './activity.dto';
+import { Activity, ActivityQuery } from './activity.entity';
 import {
   ACTIVITY_CREATED_EVENT,
   ACTIVITY_REMOVED_EVENT,

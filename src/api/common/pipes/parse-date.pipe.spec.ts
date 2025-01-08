@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { TestingModule, Test } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import { ParseDatePipe } from './parse-date.pipe';
 
 describe('ParseDatePipe', () => {

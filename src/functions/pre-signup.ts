@@ -1,10 +1,10 @@
-import type { BasePreSignUpTriggerEvent, Handler } from 'aws-lambda';
 import {
-  CognitoIdentityProviderClient,
   AdminGetUserCommand,
   AdminLinkProviderForUserCommand,
+  CognitoIdentityProviderClient,
   UserNotFoundException,
 } from '@aws-sdk/client-cognito-identity-provider';
+import type { BasePreSignUpTriggerEvent, Handler } from 'aws-lambda';
 
 const client = new CognitoIdentityProviderClient();
 

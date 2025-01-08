@@ -1,9 +1,9 @@
+import { ConfigFactory, ConfigObject } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import {
   DatabaseConfig,
   configFactory as dbConfigFactory,
 } from '../../database/config';
-import { ConfigFactory, ConfigObject } from '@nestjs/config';
 
 export interface AppConfig extends ConfigObject {
   typeorm: TypeOrmModuleOptions & DatabaseConfig;

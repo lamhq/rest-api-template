@@ -1,8 +1,8 @@
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
+import { ObjectId } from 'mongodb';
 import { DataSource } from 'typeorm';
+import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { Activity } from '../activity/activity.entity';
 import { Tag } from '../tag/tag.entity';
-import { ObjectId } from 'mongodb';
 
 export default class ActivitySeeder implements Seeder {
   public async run(

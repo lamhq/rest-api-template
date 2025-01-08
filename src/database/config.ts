@@ -1,5 +1,5 @@
-import 'reflect-metadata';
 import 'dotenv/config';
+import 'reflect-metadata';
 import { DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 

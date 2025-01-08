@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { ConfigService, ConfigModule } from '@nestjs/config';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ActivityController } from './activity/activity.controller';
 import { Activity } from './activity/activity.entity';
 import { ActivityService } from './activity/activity.service';
 import { configFactory } from './config';
-import { TagController } from './tag/tag.controller';
 import { StatController } from './stat/stat.controller';
-import { TagService } from './tag/tag.service';
-import { Tag } from './tag/tag.entity';
 import { StatService } from './stat/stat.service';
+import { TagController } from './tag/tag.controller';
+import { Tag } from './tag/tag.entity';
+import { TagService } from './tag/tag.service';
 
 @Module({
   imports: [

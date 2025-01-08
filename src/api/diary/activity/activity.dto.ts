@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
 
 export class ActivityDto {
   @ApiProperty()

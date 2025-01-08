@@ -1,17 +1,11 @@
 import { Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { MongoRepository, ObjectLiteral } from 'typeorm';
-import { ObjectLiteral } from 'typeorm';
-import { DataSource } from 'typeorm';
+import { DataSource, ObjectLiteral } from 'typeorm';
 import { Activity, ActivityQuery } from '../activity/activity.entity';
 import { Revenue } from './revenue.entity';
 
 @Injectable()
 export class StatService {
-  constructor(
-    // @InjectRepository(Activity) private activityRepo: MongoRepository<Activity>,
-    private dataSource: DataSource,
-  ) {}
+  constructor(private dataSource: DataSource) {}
 
   async calcRevenue(query: ActivityQuery): Promise<Revenue> {
     const pipes: ObjectLiteral[] = [];

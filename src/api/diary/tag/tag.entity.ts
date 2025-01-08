@@ -1,6 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
-import { Entity, Column, ObjectIdColumn } from 'typeorm';
 import { ObjectId } from 'mongodb';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 
 @Entity({ name: 'tags' })
 export class Tag {
