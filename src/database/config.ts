@@ -9,7 +9,6 @@ export const configFactory = (): DatabaseConfig => ({
   type: 'mongodb',
   url: process.env.DB_URI ?? '',
   entities: ['src/api/diary/**/*.entity{.ts,.js}'],
-  useUnifiedTopology: true,
 
   // db migration config
   migrations: ['src/database/migration/*.ts'],

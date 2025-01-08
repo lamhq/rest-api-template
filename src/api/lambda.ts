@@ -1,5 +1,5 @@
 import serverlessExpress from '@codegenie/serverless-express';
-import { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
+import type { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { getNestApp } from './app';
 import { RequestListener } from 'http';
 

@@ -1,4 +1,4 @@
-import { BasePreSignUpTriggerEvent, Handler } from 'aws-lambda';
+import type { BasePreSignUpTriggerEvent, Handler } from 'aws-lambda';
 import {
   CognitoIdentityProviderClient,
   AdminGetUserCommand,

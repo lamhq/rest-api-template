@@ -79,7 +79,6 @@ export class ActivityService {
       ACTIVITY_REMOVED_EVENT,
       new ActivityRemovedEvent({ activity }),
     );
-    console.log(activity);
     await this.activityRepo.delete(new ObjectId(id));
   }
 

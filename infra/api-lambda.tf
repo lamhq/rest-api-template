@@ -2,8 +2,7 @@
 variable "api_env_vars" {
   description = "Environment variables for the application"
   type = object({
-    WEB_URL = string
-    DB_URI  = string
+    DB_URI = string
   })
 }
 
