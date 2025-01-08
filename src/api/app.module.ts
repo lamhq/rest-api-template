@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CrudModule } from './crud/crud.module';
+import { DiaryModule } from './diary/diary.module';
 
 @Module({
-  imports: [CrudModule],
+  imports: [DiaryModule],
 })
 export class AppModule {}

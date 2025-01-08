@@ -8,7 +8,7 @@ export type DatabaseConfig = DataSourceOptions & SeederOptions;
 export const configFactory = (): DatabaseConfig => ({
   type: 'mongodb',
   url: process.env.DB_URI ?? '',
-  entities: ['src/api/diary/**/*.entity.ts'],
+  entities: ['src/api/diary/**/*.entity{.ts,.js}'],
   useUnifiedTopology: true,
 
   // db migration config
@@ -19,7 +19,4 @@ export const configFactory = (): DatabaseConfig => ({
   seeds: ['src/api/diary/seeds/**/*.ts'],
   factories: ['src/api/diary/factories/**/*.ts'],
   seedTracking: false, // ensure that a seeder is only executed once
-
-  // NestJS config
-  // autoLoadEntities: true,
 });
