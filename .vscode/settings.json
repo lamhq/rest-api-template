@@ -1,0 +1,30 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "taskExplorer.clickAction": "Execute",
+  "taskExplorer.enabledTasks": {
+    "tsc": false,
+    "ruby": false,
+    "ant": false,
+    "bash": false,
+    "composer": false,
+    "gradle": false,
+    "grunt": false,
+    "gulp": false,
+    "make": false,
+    "maven": false,
+    "npm": false,
+    "perl": false,
+    "pipenv": false,
+    "powershell": false,
+    "python": false
+  },
+  "taskExplorer.expanded": {
+    "lastTasks": false,
+    "favorites": false
+  }
+}
