@@ -1,8 +1,10 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { createApp } from './app';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  const app = await createApp();
+  await app.listen(process.env.PORT || 3000);
 }
-bootstrap();
+
+bootstrap().catch((error: unknown) => {
+  console.error('Unhandled error during bootstrap:', error);
+});

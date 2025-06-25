@@ -16,7 +16,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "lint-staged": {
     "*.ts": "eslint --fix"
@@ -27,10 +28,17 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.1.3",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.3",
+    "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^11.1.3",
+    "@nestjs/typeorm": "^11.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "pg": "^8.16.2",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "typeorm": "^0.3.25"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -46,6 +54,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.33",
     "@types/supertest": "^6.0.3",
+    "dotenv": "^16.5.0",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.0",
