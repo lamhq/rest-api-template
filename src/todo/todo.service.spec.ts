@@ -10,16 +10,16 @@ import { TodoService } from './todo.service';
 
 describe('TodoService', () => {
   let service: TodoService;
-  let todoRepository: MockProxy<Repository<Todo>>;
+  let mockTodoRepo: MockProxy<Repository<Todo>>;
 
   beforeEach(async () => {
-    todoRepository = mock<Repository<Todo>>();
+    mockTodoRepo = mock<Repository<Todo>>();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TodoService,
         {
           provide: getRepositoryToken(Todo),
-          useValue: todoRepository,
+          useValue: mockTodoRepo,
         },
       ],
     }).compile();
@@ -44,20 +44,20 @@ describe('TodoService', () => {
         updatedAt: new Date(),
         status: undefined,
       } as unknown as Todo;
-      todoRepository.create.mockReturnValue(entity);
-      todoRepository.save.mockResolvedValue(entity);
+      mockTodoRepo.create.mockReturnValue(entity);
+      mockTodoRepo.save.mockResolvedValue(entity);
       await expect(service.create(dto)).resolves.toEqual(entity);
-      expect(todoRepository.create).toHaveBeenCalledWith(dto);
-      expect(todoRepository.save).toHaveBeenCalledWith(entity);
+      expect(mockTodoRepo.create).toHaveBeenCalledWith(dto);
+      expect(mockTodoRepo.save).toHaveBeenCalledWith(entity);
     });
   });
 
   describe('findAll', () => {
     it('should return todos and count', async () => {
       const todos: Todo[] = [];
-      todoRepository.findAndCount.mockResolvedValue([todos, 0]);
+      mockTodoRepo.findAndCount.mockResolvedValue([todos, 0]);
       await expect(service.findAll(0, 10)).resolves.toEqual([todos, 0]);
-      expect(todoRepository.findAndCount).toHaveBeenCalledWith({
+      expect(mockTodoRepo.findAndCount).toHaveBeenCalledWith({
         order: { createdAt: 'DESC' },
         skip: 0,
         take: 10,
@@ -75,12 +75,12 @@ describe('TodoService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       } as unknown as Todo;
-      todoRepository.findOne.mockResolvedValue(todo);
+      mockTodoRepo.findOne.mockResolvedValue(todo);
       await expect(service.findOne('1')).resolves.toEqual(todo);
-      expect(todoRepository.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
+      expect(mockTodoRepo.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
     });
     it('should throw NotFoundException if not found', async () => {
-      todoRepository.findOne.mockResolvedValue(undefined);
+      mockTodoRepo.findOne.mockResolvedValue(undefined);
       await expect(service.findOne('1')).rejects.toThrow(NotFoundException);
     });
   });
@@ -96,10 +96,10 @@ describe('TodoService', () => {
         updatedAt: new Date(),
       } as unknown as Todo;
       const dto: UpdateTodoDto = { title: 'New' };
-      todoRepository.findOne.mockResolvedValue(todo);
-      todoRepository.save.mockResolvedValue({ ...todo, ...dto });
+      mockTodoRepo.findOne.mockResolvedValue(todo);
+      mockTodoRepo.save.mockResolvedValue({ ...todo, ...dto });
       await expect(service.update('1', dto)).resolves.toEqual({ ...todo, ...dto });
-      expect(todoRepository.save).toHaveBeenCalledWith({ ...todo, ...dto });
+      expect(mockTodoRepo.save).toHaveBeenCalledWith({ ...todo, ...dto });
     });
   });
 
@@ -113,10 +113,10 @@ describe('TodoService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       } as unknown as Todo;
-      todoRepository.findOne.mockResolvedValue(todo);
-      todoRepository.remove.mockResolvedValue(todo);
+      mockTodoRepo.findOne.mockResolvedValue(todo);
+      mockTodoRepo.remove.mockResolvedValue(todo);
       await expect(service.remove('1')).resolves.toBeUndefined();
-      expect(todoRepository.remove).toHaveBeenCalledWith(todo);
+      expect(mockTodoRepo.remove).toHaveBeenCalledWith(todo);
     });
   });
 });
