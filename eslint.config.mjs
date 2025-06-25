@@ -24,6 +24,15 @@ export default tseslint.config(
       },
     },
   },
+  // unit test files
+  {
+    files: ['**/*.spec.ts'],
+    rules: {
+      // allow accessing mocked object's methods in unit tests
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
+  // custom rules for TypeScript files
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
