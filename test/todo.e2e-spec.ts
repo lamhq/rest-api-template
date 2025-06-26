@@ -5,6 +5,7 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { Repository } from 'typeorm';
+import { JwtAuthGuard } from '../src/auth';
 import { Todo } from '../src/todo/entities/todo.entity';
 import { TodoModule } from '../src/todo/todo.module';
 
@@ -20,6 +21,8 @@ describe('TodoController (e2e)', () => {
     })
       .overrideProvider(getRepositoryToken(Todo))
       .useValue(mockTodoRepo)
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
       .compile();
 
     app = moduleFixture.createNestApplication();
