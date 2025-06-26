@@ -2,6 +2,35 @@
 
 Starter code for a NestJS RESTful API.
 
+## Techstach
+
+- NestJS v11
+- Node.js v22
+- TypeScript v5
+- Postgres v13.3
+
+## Highlights
+
+1. **Simple & Easy to Modify**: The codebase closely follows the standard NestJS TypeScript starter, minimizing customizations. This makes it straightforward to understand, with no learning curve, and easy to extend for new features.
+2. **Dockerfile & Docker Compose**: Easily run the application locally with one command.
+3. **VS Code Setting**: Includes recommended VS Code settings, tasks, and extensions for a smooth developer experience.
+4. **Prettier Configuration**: Enforces consistent code formatting across the project.
+5. **Jest Configuration**: Configured for both unit and e2e testing.
+6. **ESLint Configuration**: Ensures code quality and consistency with customizable linting rules.
+7. **Automatic Code Linting**: Lints code automatically before each commit to prevent errors from entering the codebase.
+8. **Automatic Commit Message Linting**: Enforces commit message standards to follow the conventional commit format.
+9. **Sample CRUD code**: Provides example code for a typical Create, Read, Update, Delete (CRUD) API (see `todo` module).
+10. **Sample Authentication code**: Includes sample authentication logic using email and password (see `auth` module).
+11. **Automated API Documentation**: Swagger UI is automatically generated and available at `/docs`.
+12. **Standardized Error Responses**: All errors follow a consistent, structured response format.
+13. **Automated Request Validation**: Request payloads are validated automatically with clear error messages.
+14. **TypeORM integration with Postgres**: Fully integrated with NestJS.
+15. **TypeORM migrations with sample data**: Includes migration scripts for creating tables and adding sample data.
+16. **Application Config**: Predefined app settings to use in NestJS application.
+17. **Sample End-to-End Teste**: e2e tests run against a real Postgres database to ensure realistic integration coverage.
+18. **Sample Unit Testing with Mocking**: short and simple unit tests with mocking.
+19. **GitHub Actions CI Workflow**: Automated CI pipeline runs linting, unit tests, and e2e tests (with a real database service).
+
 ## Run the application
 
 Requirements:
@@ -54,6 +83,8 @@ JWT_SECRET=abcd
 ```
 
 ## Run migrations
+
+Run all pending migrations:
 
 ```sh
 npm run typeorm migration:run -- -d src/data-source.ts
