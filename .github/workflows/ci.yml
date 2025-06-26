@@ -9,42 +9,21 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    uses: ./.github/workflows/setup.yml
     steps:
-      - <<: *setup
       - name: Run lint
         run: pnpm lint
 
   test:
     runs-on: ubuntu-latest
+    uses: ./.github/workflows/setup.yml
     steps:
-      - <<: *setup
       - name: Run tests
         run: pnpm test
 
   e2e:
     runs-on: ubuntu-latest
+    uses: ./.github/workflows/setup.yml
     steps:
-      - <<: *setup
       - name: Run e2e tests
         run: pnpm test:e2e
-
-# Shared setup anchor
-# Use YAML aliasing to reduce redundancy
-setup: &setup
-  - name: Checkout code
-    uses: actions/checkout@v3
-
-  - name: Setup pnpm
-    uses: pnpm/action-setup@v4
-    with:
-      version: 10.12.3
-
-  - name: Set up Node.js 22
-    uses: actions/setup-node@v4
-    with:
-      node-version: 22.12.0
-      cache: pnpm
-      cache-dependency-path: pnpm-lock.yaml
-
-  - name: Install dependencies
-    run: pnpm install
