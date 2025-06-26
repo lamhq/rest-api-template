@@ -17,9 +17,9 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run lint
-        run: pnpm lint
+        run: npm run lint
 
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,10 +29,21 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run tests
-        run: pnpm test
+        run: npm run test
 
-  e2e:
+  e2e-test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.3
+        env:
+          POSTGRES_USER: testadmin
+          POSTGRES_PASSWORD: test12345
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testadmin -d testdb" --health-interval=5s --health-timeout=5s --health-retries=5 --health-start-period=10s
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,5 +51,29 @@ jobs:
       - name: Setup project environment
         uses: ./.github/actions/setup
 
+      - name: Wait for Postgres to be ready
+        run: |
+          until pg_isready -h localhost -U testadmin -d testdb; do
+            sleep 1
+          done
+        env:
+          PGPASSWORD: test12345
+
+      - name: Run migrations
+        run: npm run typeorm migration:run -- -d src/data-source.ts
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: testadmin
+          DB_PASSWORD: test12345
+          DB_DATABASE: testdb
+
       - name: Run e2e tests
-        run: pnpm test:e2e
+        run: npm run test:e2e
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: testadmin
+          DB_PASSWORD: test12345
+          DB_DATABASE: testdb
+          JWT_SECRET: SECRET123
