@@ -2,7 +2,7 @@
 
 Starter code for a NestJS RESTful API.
 
-## Techstach
+## Techstack
 
 - NestJS v11
 - Node.js v22
