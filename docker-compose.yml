@@ -20,14 +20,31 @@ services:
       retries: 5
       start_period: 10s
 
-  api-app:
+  migration-runner:
     build:
       context: .
-      target: api
-    container_name: api-app
+      target: migration-runner
+    container_name: migration-runner
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USERNAME: testadmin
+      DB_PASSWORD: test12345
+      DB_DATABASE: testdb
+    networks:
+      - test-network
+
+  api-app:
+    build:
+      context: .
+      target: api-app
+    container_name: api-app
+    depends_on:
+      migration-runner:
+        condition: service_completed_successfully
     environment:
       PORT: 3000
       DB_HOST: database
