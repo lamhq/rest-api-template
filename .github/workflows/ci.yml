@@ -9,21 +9,24 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/setup.yml
     steps:
+      - uses: ./.github/workflows/setup.yml
+
       - name: Run lint
         run: pnpm lint
 
   test:
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/setup.yml
     steps:
+      - uses: ./.github/workflows/setup.yml
+
       - name: Run tests
         run: pnpm test
 
   e2e:
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/setup.yml
     steps:
+      - uses: ./.github/workflows/setup.yml
+
       - name: Run e2e tests
         run: pnpm test:e2e
