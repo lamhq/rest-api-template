@@ -1,2 +1,2 @@
 export { ExceptionFilter } from './exception.filter';
-export { ValidateRequestBodyPipe } from './validate-request-body.pipe';
+export { RequestBodyValidationPipe as ValidateRequestBodyPipe } from './request-body-validation.pipe';

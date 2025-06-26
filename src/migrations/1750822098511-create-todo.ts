@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateSchema1750822098511 implements MigrationInterface {
+export class CreateTodo1750822098511 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Create enum type for status
     await queryRunner.query(`

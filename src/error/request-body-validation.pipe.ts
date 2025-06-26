@@ -8,10 +8,10 @@ import { ValidationException } from './validation.exception';
  * https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe
  */
 @Injectable()
-export class ValidateRequestBodyPipe extends ValidationPipe {
+export class RequestBodyValidationPipe extends ValidationPipe {
   constructor() {
     super({
-      // we want to validate required properties if missing
+      // missing properties still be validated
       skipMissingProperties: false,
 
       // properties that don't have validation decorators will be removed from the transformed result

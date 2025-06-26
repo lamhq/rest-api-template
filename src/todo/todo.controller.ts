@@ -12,6 +12,7 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -22,14 +23,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
+import { JwtAuthGuard } from '../auth/';
 import { TOTAL_COUNT_HEADER } from '../constants';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './entities/todo.entity';
 import { TodoService } from './todo.service';
 
-@ApiTags('todos')
+@ApiTags('Todos')
 @Controller('todos')
+@UseGuards(JwtAuthGuard)
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 

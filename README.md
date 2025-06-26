@@ -9,7 +9,7 @@ Requirements:
 - [Docker](https://www.docker.com/get-started) (v28+ recommended)
 - [Docker Compose](https://docs.docker.com/compose/) (v2.35+ recommended)
 
-Start the application by running:
+Start the Application by running:
 
 ```sh
 docker compose up
@@ -18,6 +18,12 @@ docker compose up
 - The API app will be available at [http://localhost:3000](http://localhost:3000)
 - The API documentation (Swagger UI) will be available at [http://localhost:3000/docs](http://localhost:3000/docs)
 - The database (Postgres) will run at port 5432, with some sample data
+
+Test the Application:
+
+1. Navigate to [http://localhost:3000/docs](http://localhost:3000/docs) to open the Swagger UI interface
+2. Run the **Login API** in the **Auth** section with the default credentials (the access token will be automatically stored as an HTTP-only cookie)
+3. Once authenticated, you can test the **Todos** section APIs which require authentication
 
 ## Project setup
 
@@ -47,7 +53,7 @@ DB_DATABASE=testdb
 JWT_SECRET=abcd
 ```
 
-## Compile and run the project
+## Run the project
 
 ```bash
 # development
@@ -69,4 +75,12 @@ npm run test:e2e
 
 # test coverage
 npm run test:cov
+```
+
+## Run migrations
+
+```sh
+npm run typeorm migration:run -- -d src/data-source.ts
+npm run typeorm migration:create src/migrations/create-user
+npm run typeorm migration:revert -- -d src/data-source.ts
 ```

@@ -8,6 +8,7 @@ export interface AppConfig extends ConfigObject {
     password: string;
     database: string;
   };
+  jwtSecret: string;
 }
 
 export const configFactory: ConfigFactory<AppConfig> = () => {
@@ -19,6 +20,7 @@ export const configFactory: ConfigFactory<AppConfig> = () => {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
     },
+    jwtSecret: process.env.JWT_SECRET,
   };
 
   return config;

@@ -1,10 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { ExceptionFilter, ValidateRequestBodyPipe } from './error';
 
 export async function createApp() {
   const app = await NestFactory.create(AppModule);
+
+  // Enable cookie parser middleware
+  app.use(cookieParser());
 
   // auto validate request body
   app.useGlobalPipes(new ValidateRequestBodyPipe());
