@@ -10,23 +10,23 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-
       - name: Run lint
         run: pnpm lint
 
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-
       - name: Run tests
         run: pnpm test
 
   e2e:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-
       - name: Run e2e tests
         run: pnpm test:e2e
