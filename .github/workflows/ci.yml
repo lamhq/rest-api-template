@@ -76,3 +76,4 @@ jobs:
           DB_USERNAME: testadmin
           DB_PASSWORD: test12345
           DB_DATABASE: testdb
+          JWT_SECRET: SECRET123
