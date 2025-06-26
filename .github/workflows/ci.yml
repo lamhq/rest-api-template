@@ -10,7 +10,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/setup.yml
+      - uses: ./.github/actions/setup
 
       - name: Run lint
         run: pnpm lint
@@ -18,7 +18,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/setup.yml
+      - uses: ./.github/actions/setup
 
       - name: Run tests
         run: pnpm test
@@ -26,7 +26,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/setup.yml
+      - uses: ./.github/actions/setup
 
       - name: Run e2e tests
         run: pnpm test:e2e
