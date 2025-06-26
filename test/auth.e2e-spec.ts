@@ -1,26 +1,14 @@
-import { INestApplication, UnauthorizedException } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { mock, MockProxy } from 'jest-mock-extended';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
-import { AuthController } from '../src/auth/controllers/auth.controller';
+import { createApp } from '../src/app';
 import { LoginDto } from '../src/auth/dtos/login.dto';
-import { User } from '../src/auth/entities/user.entity';
-import { AuthService } from '../src/auth/services/auth.service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication<App>;
-  let mockAuthService: MockProxy<AuthService>;
 
   beforeAll(async () => {
-    mockAuthService = mock<AuthService>();
-
-    const moduleFixture = await Test.createTestingModule({
-      controllers: [AuthController],
-      providers: [{ provide: AuthService, useValue: mockAuthService }],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
+    app = await createApp<App>();
     await app.init();
   });
 
@@ -29,21 +17,8 @@ describe('AuthController (e2e)', () => {
   });
 
   it('/auth/access-tokens (POST) should login and return access token', async () => {
-    const user: User = {
-      id: '1',
-      email: 'test@test.com',
-      username: 'testuser',
-      hashedPassword: 'hashed',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // please refer to user information in `src/migrations/1750906332138-create-user.ts`
     const loginDto: LoginDto = { username: 'test@test.com', password: '12345' };
-    const accessToken = 'jwt-token';
-    mockAuthService.login.mockResolvedValue({
-      accessToken,
-      user: { id: user.id, email: user.email, username: user.username },
-    });
-
     const res = await request(app.getHttpServer())
       .post('/auth/access-tokens')
       .send(loginDto)
@@ -52,23 +27,18 @@ describe('AuthController (e2e)', () => {
 
     expect(responseBody).toHaveProperty('accessToken');
     expect(responseBody.user).toMatchObject({
-      id: user.id,
-      email: user.email,
-      username: user.username,
+      id: '11111111-1111-1111-1111-111111111111',
+      email: 'test@test.com',
+      username: 'testuser',
     });
     expect(res.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining(`accessToken=${accessToken}`),
-      ]),
+      expect.arrayContaining([expect.stringContaining('accessToken=')]),
     );
   });
 
   it('/auth/access-tokens (POST) should return 401 for invalid credentials', async () => {
+    // please refer to user information in `src/migrations/1750906332138-create-user.ts`
     const loginDto: LoginDto = { username: 'wrong@test.com', password: 'wrong' };
-    mockAuthService.login.mockImplementation(() => {
-      throw new UnauthorizedException('Invalid credentials');
-    });
-
     const res = await request(app.getHttpServer())
       .post('/auth/access-tokens')
       .send(loginDto)

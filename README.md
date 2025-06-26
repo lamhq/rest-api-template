@@ -53,6 +53,24 @@ DB_DATABASE=testdb
 JWT_SECRET=abcd
 ```
 
+## Run migrations
+
+```sh
+npm run typeorm migration:run -- -d src/data-source.ts
+```
+
+To create a new migration code:
+
+```sh
+npm run typeorm migration:create src/migrations/create-user
+```
+
+Revert latest migration:
+
+```sh
+npm run typeorm migration:revert -- -d src/data-source.ts
+```
+
 ## Run the project
 
 ```bash
@@ -70,17 +88,9 @@ npm run start
 # unit tests
 npm run test
 
-# e2e tests
+# e2e tests (require Postgres running)
 npm run test:e2e
 
 # test coverage
 npm run test:cov
-```
-
-## Run migrations
-
-```sh
-npm run typeorm migration:run -- -d src/data-source.ts
-npm run typeorm migration:create src/migrations/create-user
-npm run typeorm migration:revert -- -d src/data-source.ts
 ```

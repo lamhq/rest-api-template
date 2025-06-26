@@ -18,12 +18,13 @@ export class CreateUser1750906332138 implements MigrationInterface {
     // Pre-computed bcrypt hash for password '12345' with salt rounds 10
     const hashedPassword =
       '$2b$10$hhZcITYX6wdw2l6sN.EyMejJNTOxqkJFyfXH7sI9dAuVtpUYqmhOy';
+    const userId = '11111111-1111-1111-1111-111111111111'; // static UUID for sample user
     await queryRunner.query(
       `
-      INSERT INTO users (email, username, hashed_password, created_at, updated_at)
-      VALUES ('test@test.com', 'testuser', $1, NOW(), NOW())
+      INSERT INTO users (id, email, username, hashed_password, created_at, updated_at)
+      VALUES ($1, 'test@test.com', 'testuser', $2, NOW(), NOW())
     `,
-      [hashedPassword],
+      [userId, hashedPassword],
     );
   }
 

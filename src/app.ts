@@ -1,10 +1,11 @@
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { ExceptionFilter, ValidateRequestBodyPipe } from './error';
 
-export async function createApp() {
+export async function createApp<T>(): Promise<INestApplication<T>> {
   const app = await NestFactory.create(AppModule);
 
   // Enable cookie parser middleware
