@@ -1,4 +1,14 @@
-node_modules/
+# Local
+.DS_Store
+*.local
+*.log*
+
+# Dist
+node_modules
 dist/
+
+# Test
 coverage/
+
+# Env
 .env
