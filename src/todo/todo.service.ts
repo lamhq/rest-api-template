@@ -18,11 +18,20 @@ export class TodoService {
   }
 
   async findAll(offset = 0, limit = 10): Promise<[Todo[], number]> {
-    return await this.todoRepository.findAndCount({
-      order: { createdAt: 'DESC' },
-      skip: offset,
-      take: limit,
-    });
+    const queryBuilder = this.todoRepository.createQueryBuilder('todo');
+
+    // Add custom ordering with CASE statements
+    queryBuilder
+      .orderBy(
+        `CASE 
+          WHEN todo.status = 'completed' THEN 1 
+          ELSE 0 
+        END`,
+        'ASC',
+      )
+      .addOrderBy(`todo.createdAt`, 'DESC');
+
+    return await queryBuilder.skip(offset).take(limit).getManyAndCount();
   }
 
   async findOne(id: string): Promise<Todo> {
